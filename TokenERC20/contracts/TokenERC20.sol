@@ -22,7 +22,7 @@ contract WRAPTOKEN is IERC20 {
     uint256 public fee3;
     address private address1;
     address private address2;
-    address private address3; //burnaddress by default
+    address private burnAddress;
     uint256 private maxTx; //max transaction limit
     uint256 private maxHoldLimit; // max limit per wallet to hold
     uint256 public _totalSupply;
@@ -57,7 +57,7 @@ contract WRAPTOKEN is IERC20 {
         emit Transfer(address(0), msg.sender, _totalSupply);
         address1 = _feereceiever1; // fee recieving wallets ... Ecosystem MultiSig Wallet for the Ecosystem Revenue and Run Costs
         address2 = _feereceiever2; // Ecosystem Multisig Reward and Incentive Pool
-        address3 = address(0); // burn this amount
+        burnAddress = address(0); // burn this amount
         fee1 = feea;  
         fee2 = feeb;
         fee3 = feec;
@@ -89,7 +89,7 @@ contract WRAPTOKEN is IERC20 {
     }
 
      function totalUnburntSupply() public view returns (uint256) {
-        uint256 totSupply = _totalSupply - _balances[address3];
+        uint256 totSupply = _totalSupply - _balances[burnAddress];
         return totSupply;
     }
 
@@ -175,7 +175,7 @@ contract WRAPTOKEN is IERC20 {
             _transfer(msg.sender, recipient, amtAfterFee);
             _transfer(msg.sender, address1, feeAmount1); 
             _transfer(msg.sender, address2, feeAmount2);
-            _transfer(msg.sender, address3, feeAmount3);
+            _transfer(msg.sender, burnAddress, feeAmount3);
         }
         _transfer(msg.sender, recipient, amount);
         return true;
@@ -195,7 +195,7 @@ contract WRAPTOKEN is IERC20 {
             _transfer(sender, recipient, amtAfterFee);
             _transfer(sender, address1, feeAmount1);
             _transfer(sender, address2, feeAmount2);
-            _transfer(sender, address3, feeAmount3);
+            _transfer(sender, burnAddress, feeAmount3);
         } else {
             _transfer(sender, recipient, amount);
         }
@@ -250,7 +250,7 @@ contract WRAPTOKEN is IERC20 {
         require(msg.sender == owner(), "Only the owner can set the address");
         address1 = _address1;
         address2 = _address2;
-        address3 = _address3;
+        burnAddress = _address3;
         return true;
     }
 
